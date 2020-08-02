@@ -17,7 +17,52 @@ black_color = (0, 0, 0)
 ball_image = pygame.image.load('images/ball_r.png')
 ball_y_momentum = 0
 angle = 0
+
+isJump = False
+jumpCount = 10
+
+x = 20
+y = 300
+width = 40
+height = 60
+vel = 10
+
 while True:
+    pygame.time.delay(100)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_LEFT] and x > vel:
+        x -= vel
+    if keys[pygame.K_RIGHT] and x < WINDOW_SIZE[0] - width - vel:
+        x += vel
+    if not isJump:
+        if keys[pygame.K_UP] and y > vel:
+            y -= vel
+        if keys[pygame.K_DOWN] and y < WINDOW_SIZE[1] - height - vel:
+            y += vel
+        if keys[pygame.K_SPACE]:
+            isJump = True
+    else:
+        if jumpCount >= -10:
+            neg = 1
+            if jumpCount < 0:
+                neg = -1
+            y -= (jumpCount ** 2) * 0.5 * neg
+            jumpCount -= 1
+        else:
+            isJump = False
+            jumpCount = 10
+
+    screen.fill(black_color)
+    pygame.draw.rect(screen, (255,0,0), (x,y, width, height))
+    pygame.display.update()
+
+"""
     screen.fill(black_color)
 
     angle %= 360
@@ -31,7 +76,6 @@ while True:
         ball_loc[0] -= 0.1
         angle += 0.1
 
-    #print(ball_loc[1])
     if up == True:
         ball_y_momentum = 0.5
         ball_loc[1] -= ball_y_momentum
@@ -43,11 +87,6 @@ while True:
         elif ball_loc[1] <= 0:
             print("puff")
             ball_loc[1] = 0
-
-
-
-
-
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -66,5 +105,5 @@ while True:
                 left = False
             if event.key == K_UP:
                 up = False
+"""
 
-    pygame.display.update()
